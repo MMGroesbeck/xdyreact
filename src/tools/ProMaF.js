@@ -66,8 +66,8 @@ export class ProMaF {
         return this.values;
     }
 
-    valuesSet() {
-        return this.valuesSet;
+    uniqueValues() {
+        return this.uniqueValues;
     }
 
     negated() {
