@@ -79,6 +79,7 @@ export class ProMaF {
     }
 
     sum(addend) {
+        //May need to be a promise?
         let values = [];
         this.values.forEach(value => {
             addend.values().forEach(addendValue => {
@@ -89,6 +90,7 @@ export class ProMaF {
     }
 
     product(factor) {
+        //May need to be a promise?
         let values = [];
         this.values.forEach(value => {
             factor.values().forEach(addendValue => {
