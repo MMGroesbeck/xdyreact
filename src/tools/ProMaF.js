@@ -1,9 +1,11 @@
 // Probability Mass Function
 
+import * as Roll from './Roll';
+
 export class ProMaF {
     constructor(values) {
         this.mass = {};
-        this.values = values.sort((a,b)=>(a-b));
+        this.values = typeof values === 'number' ? [values] : values.sort((a,b)=>(a-b));
         this.valuesSet = new Set();
         this.total = 0;
         values.forEach(value => {
@@ -91,12 +93,23 @@ export class ProMaF {
 
     product(factor) {
         //May need to be a promise?
+        //ProMaF of product of this * factor
         let values = [];
         this.values.forEach(value => {
             factor.values().forEach(addendValue => {
                 values.push(value * addendValue);
             })
         });
+        return new ProMaF(values);
+    }
+
+    times(conseq) {
+        // Should be promise resolving to a ProMaF
+        // Total ProMaF if conseq is rolled this times (conditional)
+        let values = [];
+        this.uniqueValues.forEach(val => {
+            values.push(...Array(this.mass[val]).fill(...Roll.yXTimes(val, conseq)));
+        })
         return new ProMaF(values);
     }
 }
