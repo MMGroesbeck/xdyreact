@@ -1,5 +1,9 @@
 import { ProMaF } from "./ProMaF";
 
+// BIG NOTE: probability that kh1 is X is:
+// (product of all P(X at most)) - (P(<X))
+// for kl1, most -> least, < -> >
+
 function highest(rolls, qty=1) {
     let places = Array.from(Array(rolls.length).keys()).slice(rolls.length-qty);
     return specified(rolls, places);

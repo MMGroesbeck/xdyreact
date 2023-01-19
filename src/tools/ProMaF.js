@@ -4,12 +4,21 @@ import * as Roll from './Roll';
 
 export class ProMaF {
     constructor(values) {
+        // TODO: add expectation value, median, mode
+        // TODO: add cumulative mass object
         this.mass = {};
-        this.values = typeof values === 'number' ? [values] : values.sort((a,b)=>(a-b));
+        this.cumuMass = {};
+        this.values = typeof values === values.sort((a,b)=>(a-b));
         this.valuesSet = new Set();
         this.total = 0;
-        values.forEach(value => {
+        this.values.forEach((value, i) => {
             this.mass[value] = (value in this.mass ? this.mass[value]+1 : 1);
+            // this.cumuMass[value] = (value in this.cumuMass ? this.cumuMass[value]+1 : )
+            if (value in this.cumuMass) {
+                this.cumuMass[value] += 1;
+            } else {
+                this.cumuMass[value] = i === 0 ? 1 : this.cumuMass[this.values[i-1]]+1;
+            }
             this.valuesSet.add(value);
             this.total++;
         });
@@ -17,35 +26,51 @@ export class ProMaF {
     }
 
     lessThan(threshold) {
-        let numerator = 0;
-        this.uniqueValues.forEach(val => {
-            numerator += val < threshold ? this.mass[val] : 0;
-        })
-        return (numerator, this.total);
+        let i=0;
+        while (this.uniqueValues[i] < threshold) {
+            i++;
+        };
+        if (i === 0) {
+            return (0, this.total);
+        } else {
+            return (this.cumuMass[this.uniqueValues[i-1]], this.total);
+        }
     }
 
     atMost(threshold) {
-        let numerator = 0;
-        this.uniqueValues.forEach(val => {
-            numerator += val <= threshold ? this.mass[val] : 0;
-        })
-        return (numerator, this.total);
+        let i=0;
+        while (this.uniqueValues[i] <= threshold) {
+            i++;
+        };
+        if (i === 0) {
+            return (0, this.total);
+        } else {
+            return (this.cumuMass[this.uniqueValues[i-1]], this.total);
+        }
     }
 
     greaterThan(threshold) {
-        let numerator = 0;
-        this.uniqueValues.forEach(val => {
-            numerator += val > threshold ? this.mass[val] : 0;
-        })
-        return (numerator, this.total);
+        let i=0;
+        while (this.uniqueValues[i] <= threshold) {
+            i++;
+        };
+        if (i === 0) {
+            return (0, this.total);
+        } else {
+            return (this.total - this.cumuMass[this.uniqueValues[i-1]], this.total);
+        }
     }
 
     atLeast(threshold) {
-        let numerator = 0;
-        this.uniqueValues.forEach(val => {
-            numerator += val >= threshold ? this.mass[val] : 0;
-        })
-        return (numerator, this.total);
+        let i=0;
+        while (this.uniqueValues[i] < threshold) {
+            i++;
+        };
+        if (i === 0) {
+            return (0, this.total);
+        } else {
+            return (this.total - this.cumuMass[this.uniqueValues[i-1]], this.total);
+        }
     }
 
     equals(target) {

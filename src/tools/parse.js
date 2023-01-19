@@ -57,6 +57,7 @@ export default function parse(rollString) {
     // - use PEMDAS, ugh.
     // remember: (typeof [ProMaF]) will return "object"
     // - ProMaF objects should be the only objects in the split-to-chunks array
+    // TODO: Check character, parentheses/brackets validity ONCE, then use subParse() recursively
     return new Promise(function(myResolve, myReject) {
         if (!/^[dkhl0-9[]()\+\*-\/]+$/.test(rollString)) {
             myReject("Invalid characters")
